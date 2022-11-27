@@ -1,5 +1,6 @@
 import { Request, Router, Response, NextFunction } from "express";
 import Users from "../../models/user.model";
+import Trips from "../../models/trip.model";
 
 const router: Router = Router();
 
@@ -14,7 +15,19 @@ router.use("/", (request: Request, response: Response, next: NextFunction) => {
     next();
   });
 
-//get rides
+router.get("/history", async (req: Request, res: Response) => {
+    const userTrips = await Trips.find({ driver: req.user.uid });
+  
+    return res.status(200).send({
+      status: "success",
+      message: "Driver Trips Fetched Successfully",
+      data: {
+        pickupLocation: userTrips?.pickupLocation,
+        routes: userTrips?.routes,
+        completedAt: userTrips?.completedAt,
+      },
+    });
+  });
 
 //get ride
 
