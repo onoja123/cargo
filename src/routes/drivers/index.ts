@@ -16,16 +16,13 @@ router.use("/", (request: Request, response: Response, next: NextFunction) => {
   });
 
 router.get("/history", async (req: Request, res: Response) => {
-    const userTrips = await Trips.find({ driver: req.user.uid });
+  // Add Detail you want to return My bad 
+    const userTrips = await Trips.find({ driver: req.user.uid }).selected();
   
     return res.status(200).send({
       status: "success",
       message: "Driver Trips Fetched Successfully",
-      data: {
-        pickupLocation: userTrips?.pickupLocation,
-        routes: userTrips?.routes,
-        completedAt: userTrips?.completedAt,
-      },
+      data: userTrips,
     });
   });
 
