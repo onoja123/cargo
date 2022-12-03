@@ -30,10 +30,11 @@ export const sendSms = async(phoneNuber: any, body:string)=>{
             }
         ]
     });
-    const send = fetchData(
+    const send = await fetchData(
         process.env.INFOBIP_URL || "",
         "POST",
         postData || ""
     )
+    return send
 }
 
