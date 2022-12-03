@@ -25,6 +25,7 @@ export interface IUser extends Document {
   phoneNumber: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
+  isVerifed: boolean;
   accountType: string;
   kycStatus: string;
   createdAt: Date;
@@ -79,6 +80,10 @@ const User = new Schema<IUser>({
     default: false,
   },
   isPhoneVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isVerifed: {
     type: Boolean,
     default: false,
   },
