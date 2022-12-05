@@ -15,6 +15,23 @@ export const fetchDataDOJAH = async(url: string, method:string, data:string)=>{
     const request = await axios(option)
     return request
 }
+const imageToString =  (src : string, callback:any)=>{
+    const image = new Image()
+    image.crossOrigin = 'Anonymous';
+    image.onload = () => {
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        canvas.height = image.naturalHeight;
+        canvas.width = image.naturalWidth;
+        if(context){
+            context.drawImage(image, 0, 0);
+        }
+        var dataURL = canvas.toDataURL('image/jpeg');
+        callback(dataURL);
+     };
+     image.src = src
+}
+
 
 
 /**
