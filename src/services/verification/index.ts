@@ -63,4 +63,25 @@ const imageToString =  (src : string, callback:any)=>{
 }
 
 
+
+/**
+ * @note This Whole function isnt working yet __ I would `finish it if it need` 
+ * @param {string} imagepath image path this is to change the image to data:image/jpeg;base64 before posting 
+ * @param {string} nin the user NIN code 
+ */
+ export const verifyNINWithSelfie = async (imagepath:string, nin:string)=>{
+    try {
+        const newImage = imageToString(imagepath, (dataNew :any) =>{
+            return dataNew
+        })
+        const data = JSON.stringify({
+            "selfie_image" : newImage,
+            "nin" : nin
+        })
+        const verify = await fetchDataDOJAH(`${process.env.DOJAH_API_URL}/api/v1/kyc/nin/verify`, "POST", data)
+    } catch (error) {
+        return error
+    }
+}
+
 // Redissss bugs i can till log in 
