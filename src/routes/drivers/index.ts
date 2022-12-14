@@ -1,6 +1,7 @@
 import { Request, Router, Response, NextFunction } from "express";
 import Users from "../../models/user.model";
 import Trips from "../../models/trip.model";
+import { fetchDataDOJAH } from "../../services/verification";
 
 const router: Router = Router();
 
@@ -94,4 +95,64 @@ router.post(":uid/update-profile", async (req: Request, res: Response) => {
     }
   });
 
+
+  router.post("/verify", async (req: Request, res: Response) => {
+      let {type, license, nin} = req.body
+      try {
+        if(!type || type == ""){
+          return res.status(400).send({
+            status: "fail",
+            message: "Type of verification is needed"
+          });
+        }
+
+        type = type.toLowerCase()
+        let url = "";
+        //TODO: Set to ENV
+        const headers = {
+          "Authorization": "test_sk_lh2IcQYj77ZQKffm4vaob205c",
+          "AppId":"63986f81c3a43300361eb24b",
+          'Accept-Encoding': 'gzip,deflate,compress'
+        };
+
+        if(type == "license"){
+          if (license == "" || !license){
+            return res.status(400).send({
+              status: "fail",
+              message: "License is Required"
+            });
+          } 
+          url = `https://sandbox.dojah.io/api/v1/kyc/dl?license_number=${license}`;
+          nin = null;          
+        }
+        
+        if(type == "nin"){
+          if (nin == "" || !nin){
+            return res.status(400).send({
+              status: "fail",
+              message: "NIN is Required"
+            });
+          }
+          url = `https://sandbox.dojah.io/api/v1/kyc/dl?lnin=${nin}`
+          license = null;
+        }
+
+      const response = await fetchDataDOJAH( url,headers,"GET","")
+
+      if (response.status !== 200) {
+        console.log("Response status ", response.status);
+        res.end()
+      }
+
+      res.json(response.data)
+      
+      } catch (error) {
+        return res.status(500).send({
+          status: "failed",
+          message: "Server Error Try Again"
+        });
+      } 
+    });
+
+    
 export default router;

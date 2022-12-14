@@ -21,3 +21,4 @@ export interface IVerification extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
